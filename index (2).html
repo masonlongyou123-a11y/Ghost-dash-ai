@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ghost AI</title>
+<style>
+:root{color-scheme:dark;--bg:#101019;--panel:#191927;--line:#303044;--purple:#9b7bff;--text:#f4f1ff;--muted:#aaa6bd}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:16px system-ui, sans-serif;min-height:100vh;display:flex}
+aside{width:230px;background:#14141f;border-right:1px solid var(--line);padding:22px 16px}
+.logo{font-size:22px;font-weight:800;letter-spacing:.4px}.orb{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:12px;background:linear-gradient(135deg,#a98bff,#5933bc);margin-right:8px}
+aside p{color:var(--muted);font-size:13px;line-height:1.5;margin-top:22px}
+main{flex:1;display:flex;flex-direction:column;max-width:900px;margin:auto;width:100%;padding:26px 22px}
+header{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);padding-bottom:16px}
+.badge{font-size:12px;color:#d4c8ff;border:1px solid #594a83;border-radius:20px;padding:6px 10px}
+#chat{flex:1;min-height:55vh;padding:24px 0;display:flex;flex-direction:column;gap:16px}
+.msg{max-width:82%;padding:13px 16px;border-radius:16px;line-height:1.5;white-space:pre-wrap}
+.bot{align-self:flex-start;background:var(--panel);border:1px solid var(--line)}.user{align-self:flex-end;background:#49358a}
+form{display:flex;gap:9px;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:10px}
+input{flex:1;min-width:0;background:transparent;border:0;outline:0;color:var(--text);font:inherit;padding:8px}
+button{border:0;border-radius:12px;background:var(--purple);color:#130e22;font-weight:700;padding:10px 14px;cursor:pointer}
+#mic{background:#302747;color:#e5dcff}small{color:var(--muted);display:block;text-align:center;margin-top:12px}
+@media(max-width:620px){aside{display:none}main{padding:18px 12px}.msg{max-width:95%}}
+</style></head>
+<body>
+<aside><div class="logo"><span class="orb">👻</span>Ghost AI</div><p>Your creative AI workspace.</p><p><b>Prototype 1.0</b><br>Text chat and browser voice demo.</p></aside>
+<main><header><div><b>Ghost AI</b><div style="color:var(--muted);font-size:13px">Your ideas start here</div></div><span class="badge">DEMO MODE</span></header>
+<section id="chat"><div class="msg bot">Hey! I'm Ghost AI. Tell me what you'd like to create. I can help brainstorm and make a simple demo plan.</div></section>
+<form id="form"><input id="input" autocomplete="off" placeholder="Message Ghost AI…" aria-label="Message Ghost AI"><button type="button" id="mic">🎙</button><button>Send</button></form>
+<small>Prototype only: replies are demo responses, not a connected AI service. Voice features depend on browser support.</small></main>
+<script>
+const chat=document.querySelector('#chat'), input=document.querySelector('#input');
+function add(text,who){const d=document.createElement('div');d.className='msg '+who;d.textContent=text;chat.appendChild(d);chat.scrollTop=chat.scrollHeight}
+function reply(t){let s=t.toLowerCase(),r="Cool idea. Tell me what the finished result should look like, and I can help break it into steps.";if(s.includes('website')||s.includes('site'))r="Let's plan your website. What should it be called, who is it for, and what should visitors be able to do?";else if(s.includes('game'))r="Let's design a game! Describe the goal, how players move, and what makes it fun.";else if(s.includes('hello')||s.includes('hi'))r="Hey! What are we creating today?";else if(s.includes('help'))r="I can help brainstorm a project, outline its features, and draft starter code. This demo isn't connected to a live AI yet.";setTimeout(()=>add(r,'bot'),250)}
+document.querySelector('#form').addEventListener('submit',e=>{e.preventDefault();let t=input.value.trim();if(!t)return;add(t,'user');input.value='';reply(t)});
+document.querySelector('#mic').addEventListener('click',()=>{const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){add("Voice input isn't supported in this browser. Try typing instead.",'bot');return}const rec=new SR();rec.lang='en-US';rec.onresult=e=>{input.value=e.results[0][0].transcript};rec.onerror=()=>add("I couldn't hear that. You can type your message instead.",'bot');rec.start()});
+</script></body></html>
